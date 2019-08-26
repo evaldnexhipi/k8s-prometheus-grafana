@@ -79,7 +79,12 @@ kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceac
     nodePort:32322
     type: NodePort (ne vend te ClusterIP)
  ```
- #### Instalimi i Prometheus
+sipas komandes:
+```bash
+sed -i 's/type:ClusterIP/type:NodePort\nnodePort:32322/g' prometheus.values
+```
+
+#### Instalimi i Prometheus
  ```bash
  helm install stable/prometheus --name prometheus --values /tmp/prometheus.values --namespace prometheus
  ```
