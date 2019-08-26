@@ -22,57 +22,17 @@ node{
                 sh 'kubectl version --short'
             }
             stage ("Deployment.yaml Configuration"){
-                sh 'touch deployment.yaml'
-                sh 'echo "kind: Deployment\napiVersion: extensions/v1beta1
-metadata:
-  name: nfs-client-provisioner
-spec:
-  replicas: 1
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        app: nfs-client-provisioner
-    spec:
-      serviceAccountName: nfs-client-provisioner
-      containers:
-        - name: nfs-client-provisioner
-          image: quay.io/external_storage/nfs-client-provisioner:latest
-          volumeMounts:
-            - name: nfs-client-root
-              mountPath: /persistentvolumes
-          env:
-            - name: PROVISIONER_NAME
-              value: example.com/nfs
-            - name: NFS_SERVER
-              value: <<NFS Server IP>>
-            - name: NFS_PATH
-              value: /srv/nfs/kubedata
-      volumes:
-        - name: nfs-client-root
-          nfs:
-            server: <<NFS Server IP>>
-            path: /srv/nfs/kubedata" >> deployment.yaml'
-            
-            sh 'sed -i "s/<<NFS Server IP>>/${remote.host}/g" deployment.yaml'
+                sh 'git clone https://github.com/evaldnexhipi/yamlFile.git'
+                sh 'sed -i "s/<<NFS Server IP>>/${remote.host}/g" yamlFile/deployment.yaml'
             }
             stage ("Class.yaml Configuration"){
-                sh 'touch class.yaml'
-                sh 'echo "apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
- name: managed-nfs-storage
- annotations: storageclass.kubernetes.io/is-default-class=true
-provisioner: example.com/nfs
-parameters:
- archiveOnDelete: \"false\"" >> class.yaml'
+                
             }
             stage ("rback.yaml Configuration"){
-                sh 'git clone https://github.com/evaldnexhipi/yamlFile.git'
+               
             }
             stage ("Deployment of the 3 files"){
-                sh 'kubectl create -f deployment.yaml class.yaml yamlFile/rbac.yaml'
+                sh 'kubectl create -f yamlFile/deployment.yaml yamlFile/class.yaml yamlFile/rbac.yaml'
             }
             stage ("Helm Installation"){
                 sh 'curl -LO https://git.io/get_helm.sh'
