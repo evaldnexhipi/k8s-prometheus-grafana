@@ -14,6 +14,8 @@ nga linku :
 [Deployment](https://github.com/justmeandopensource/kubernetes/blob/master/yamls/nfs-provisioner/deployment.yaml)
 shkojme tek cdo "NFS Server IP" , ku vendosim IP-ne e serverit tone
 
+--> [Zevendesimi i Stringut](https://askubuntu.com/questions/20414/find-and-replace-text-within-a-file-using-commands)
+
 ### Konfigurimi i class.yaml
 nga linku:
 [Class](https://github.com/justmeandopensource/kubernetes/blob/master/yamls/nfs-provisioner/class.yaml)
