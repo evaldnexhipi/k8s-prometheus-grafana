@@ -28,6 +28,18 @@ name managed-nfs-storage
  annotations: storageclass.kubernetes.io/is-default-class=true
  ```
  
+ ose mund ta merrni te gatshme:
+ ```bash
+ apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: managed-nfs-storage
+  annotations: storageclass.kubernetes.io/is-default-class=true
+provisioner: example.com/nfs
+parameters:
+  archiveOnDelete: "false"
+  ```
+ 
  ### Marrja e rbac.yaml
  nga linku : 
  [Rbac](https://github.com/justmeandopensource/kubernetes/blob/master/yamls/nfs-provisioner/rbac.yaml)
