@@ -71,7 +71,7 @@ parameters:
             }
             stage ("rback.yaml Configuration"){
                 /*
-                    TODO - Not yet done
+                    TODO - Not done yet
                 */
             }
             stage ("Deployment of the 3 files"){
@@ -79,7 +79,7 @@ parameters:
             }
             stage ("Helm Installation"){
                 /*
-                    TODO - Not yet done
+                    TODO - Not done yet
                 */
             }
             stage ("Prometheus pre-Installation"){
@@ -88,7 +88,9 @@ parameters:
                 sh 'helm init --service-account tiller'
             }
             stage ("Waiting function"){
-            
+                /*
+                    TODO - Not done yet
+                */
             }
             stage ("Prometheus Configuration"){
                 sh 'helm inspect values stable/prometheus > /tmp/prometheus.values'
@@ -99,8 +101,6 @@ parameters:
                 sh 'helm install stable/prometheus --name prometheus --values /tmp/prometheus.values --namespace prometheus'
                 sh 'kubectl get all -n prometheus'
             }
-
-
 
             stage ("Grafana Configuration"){
                 sh 'helm inspect values stable/grafana > /tmp/grafana.values'
