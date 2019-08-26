@@ -16,10 +16,12 @@ node{
             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
         ]]) 
         {
-            stage ("stage 1"){
-            
+            stage ("Verifications"){
+                sh 'kubectl cluster-info'
+                sh 'kubectl get nodes'
+                sh 'kubectl version --short'
             }
-            stage ("stage 2"){
+            stage ("Deployment.yaml Configuration"){
             
             }
             stage ("stage 3"){
