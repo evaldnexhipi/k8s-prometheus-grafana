@@ -1,7 +1,7 @@
 def remote = [:]
 remote.name = "ubuntu"
 remote.allowAnyHosts = true
-remote.host = "IP-ja"
+remote.host = "18.188.207.128"
 def ID
 def IP
 node{
@@ -26,9 +26,13 @@ node{
                 sh 'git clone https://github.com/evaldnexhipi/yamlFile.git'
                 sh 'echo "hiii"'
                 sh "sed -i \"s/<<NFS Server IP>>/\"${remote.host}\"/g\" yamlFile/deployment.yaml"
+                sh 'head yamlFile/deployment.yaml'
             }
             stage ("Deployment of the 3 files"){
-                sh 'kubectl create -f yamlFile/deployment.yaml yamlFile/class.yaml yamlFile/rbac.yaml'
+                //sh 'kubectl delete deployment.apps/nfs-client-provisioner'
+                sh 'kubectl create -f yamlFile/deployment.yaml' 
+                sh 'kubectl create -f yamlFile/class.yaml'
+                sh 'kubectl create -f yamlFile/rbac.yaml'
             }
             stage ("Helm Installation"){
                 sh 'curl -LO https://git.io/get_helm.sh'
