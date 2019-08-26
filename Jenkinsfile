@@ -23,8 +23,7 @@ node{
             }
             stage ("Deployment.yaml Configuration"){
                 sh 'touch deployment.yaml'
-                sh 'echo "kind: Deployment
-apiVersion: extensions/v1beta1
+                sh 'echo "kind: Deployment\napiVersion: extensions/v1beta1
 metadata:
   name: nfs-client-provisioner
 spec:
