@@ -78,7 +78,9 @@ kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceac
  kubectl get all -n prometheus
  ```
 
- 
+ <br />
+ <br />
+ <br />
  ## Instalimi i Grafana-s
  #### Konfigurimi i vlerave paraprake te Grafana-s perpara instalimit:
  ```bash
