@@ -27,9 +27,9 @@ node{
                 sh "sed -i \"s/<<NFS Server IP>>/\"${remote.host}\"/g\" yamlFile/deployment.yaml"
             }
             stage ("Deployment of the 3 files"){
-                //sh 'kubectl delete deployment.apps/nfs-client-provisioner'
+                sh 'kubectl delete deployment.apps/nfs-client-provisioner'
                 sh 'kubectl create -f yamlFile/deployment.yaml' 
-                sh 'kubectl create -f yamlFile/class.yaml'
+                sh 'kubectl create -f yamlFile/class.yaml --validate=false'
                 sh 'kubectl create -f yamlFile/rbac.yaml'
             }
             stage ("Helm Installation"){
