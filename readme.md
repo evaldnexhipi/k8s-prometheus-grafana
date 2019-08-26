@@ -1,6 +1,6 @@
-#Monitorimi i Prometheus per Kubernetes Cluster dhe Visualizimi i Grafanes
+# Monitorimi i Prometheus per Kubernetes Cluster dhe Visualizimi i Grafanes
 
-##Verifikimet
+## Verifikimet
 ```bash
 kubectl cluster-info
 kubectl get nodes
