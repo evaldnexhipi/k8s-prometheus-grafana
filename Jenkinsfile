@@ -59,7 +59,15 @@ spec:
             sh 'sed -i "s/<<NFS Server IP>>/${remote.host}/g" deployment.yaml'
             }
             stage ("stage 3"){
-            
+                sh 'touch class.yaml'
+                sh 'echo "apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+ name: managed-nfs-storage
+ annotations: storageclass.kubernetes.io/is-default-class=true
+provisioner: example.com/nfs
+parameters:
+ archiveOnDelete: \"false\"" >> class.yaml'
             }
             stage ("stage 4"){
             
