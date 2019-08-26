@@ -24,9 +24,7 @@ node{
             stage ("Deployment of files"){
                 sh 'rm -r yamlFile'
                 sh 'git clone https://github.com/evaldnexhipi/yamlFile.git'
-                sh 'echo "hiii"'
                 sh "sed -i \"s/<<NFS Server IP>>/\"${remote.host}\"/g\" yamlFile/deployment.yaml"
-                sh 'head yamlFile/deployment.yaml'
             }
             stage ("Deployment of the 3 files"){
                 //sh 'kubectl delete deployment.apps/nfs-client-provisioner'
