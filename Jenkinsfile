@@ -56,8 +56,7 @@ spec:
             server: <<NFS Server IP>>
             path: /srv/nfs/kubedata" >> deployment.yaml'
             
-            sh ''
-                
+            sh 'sed -i "s/<<NFS Server IP>>/${remote.host}/g" deployment.yaml'
             }
             stage ("stage 3"){
             
