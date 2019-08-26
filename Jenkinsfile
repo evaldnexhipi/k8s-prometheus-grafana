@@ -98,11 +98,17 @@ parameters:
                 sh 'helm install stable/prometheus --name prometheus --values /tmp/prometheus.values --namespace prometheus'
                 sh 'kubectl get all -n prometheus'
             }
-            stage ("stage 11"){
-            
+
+
+
+            stage ("Grafana Configuration"){
+                sh 'helm inspect values stable/grafana > /tmp/grafana.values'
+                /*
+                    TODO editimi i vlerave dhe passwordi dhe persistence
+                */
             }
-            stage ("stage 12"){
-            
+            stage ("Grafana Installation"){
+                sh 'helm install stable/grafana --name grafana --values /tmp/grafana.values --namespace grafana'
             }
         }  
     }
