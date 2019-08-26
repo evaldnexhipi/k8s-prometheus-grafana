@@ -72,12 +72,43 @@ kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceac
  helm install stable/prometheus --name prometheus --values /tmp/prometheus.values --namespace prometheus
  ```
  
- #### <<>> Kerkohet nje tjeter funksion wait
+ #### <> Kerkohet nje tjeter funksion wait
  #### Kontrolli mbi instalimin me sukses te Prometheus
  ```bash
  kubectl get all -n prometheus
  ```
  
  
+ ##Instalimi i Grafana-s
+ #### Konfigurimi i vlerave paraprake te Grafana-s perpara instalimit:
+ ```bash
+ helm inspect values stable/grafana > /tmp/grafana.values
+ ```
+ Duhet edituar:
+ ```bash
+ service:
+    type: NodePort
+    nodePort: 32333
+ ```
  
+ Duhet edituar:
+ ```bash
+ adminPassword (sipas deshires)
+ ```
  
+ Duhet edituar:
+ ```bash
+ persistence:
+    enabled:true
+ ```
+ #### Instalimi i Grafana
+ ```bash
+ helm install stable/grafana --name grafana --values /tmp/grafana.values --namespace grafana
+ ```
+ #### Username-i default eshte admin ndersa passwordi ai qe konfigurat me siper!
+ 
+ ### Fshirja (opsionale)
+ ```bash
+ helm delete prometheus --purge
+ helm delete grafana --purge
+ ```
