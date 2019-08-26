@@ -51,7 +51,11 @@ kubectl create -f deployment.yaml class.yaml rbac.yaml
 ```
 
 ## Instalimi i helm
-[Helm Installation](https://helm.sh/docs/using_helm/)
+```bash
+curl -LO https://git.io/get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
+```
 
 ## Instalimi i Prometheus
 #### Krijimi i service account tiller
