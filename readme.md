@@ -25,7 +25,7 @@ name managed-nfs-storage
  ```
  frazen:
  ```bash
- annotations storageclass.kubernetes.io/is-default-class=true
+ annotations: storageclass.kubernetes.io/is-default-class=true
  ```
  
  ### Marrja e rbac.yaml
