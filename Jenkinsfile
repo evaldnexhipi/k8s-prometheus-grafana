@@ -76,9 +76,9 @@ parameters:
                 sh 'kubectl create -f deployment.yaml class.yaml yamlFile/rbac.yaml'
             }
             stage ("Helm Installation"){
-                /*
-                    TODO - Not done yet
-                */
+                sh 'curl -LO https://git.io/get_helm.sh'
+                sh 'chmod 700 get_helm.sh'
+                sh './get_helm.sh'
             }
             stage ("Prometheus pre-Installation"){
                 sh 'kubectl -n kube-system create service account tiller'
