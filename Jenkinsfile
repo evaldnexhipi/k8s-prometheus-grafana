@@ -70,12 +70,10 @@ parameters:
  archiveOnDelete: \"false\"" >> class.yaml'
             }
             stage ("rback.yaml Configuration"){
-                /*
-                    TODO - Not done yet
-                */
+                sh 'git clone https://github.com/evaldnexhipi/yamlFile.git'
             }
             stage ("Deployment of the 3 files"){
-                sh 'kubectl create -f deployment.yaml class.yaml rbac.yaml'
+                sh 'kubectl create -f deployment.yaml class.yaml yamlFile/rbac.yaml'
             }
             stage ("Helm Installation"){
                 /*
