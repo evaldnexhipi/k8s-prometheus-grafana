@@ -79,6 +79,11 @@ kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceac
  ```
  
  
+ 
+ 
+ 
+ 
+ 
  ## Instalimi i Grafana-s
  #### Konfigurimi i vlerave paraprake te Grafana-s perpara instalimit:
  ```bash
