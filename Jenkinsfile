@@ -26,10 +26,10 @@ node{
                 sh 'sed -i "s/<<NFS Server IP>>/${remote.host}/g" yamlFile/deployment.yaml'
             }
             stage ("Class.yaml Configuration"){
-                
+                sh 'echo "Done"'
             }
             stage ("rback.yaml Configuration"){
-               
+               sh 'echo "Done"'
             }
             stage ("Deployment of the 3 files"){
                 sh 'kubectl create -f yamlFile/deployment.yaml yamlFile/class.yaml yamlFile/rbac.yaml'
