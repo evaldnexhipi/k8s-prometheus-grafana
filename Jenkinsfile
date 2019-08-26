@@ -92,7 +92,8 @@ parameters:
             }
             stage ("Prometheus Configuration"){
                 sh 'helm inspect values stable/prometheus > /tmp/prometheus.values'
-                //Ndryshimi i vlerave
+                sh 'sed -i "s/type:ClusterIP/type:NodePort\nnodePort:32322/g" prometheus.values'
+
             }
             stage ("Prometheus Installation"){
                 sh 'helm install stable/prometheus --name prometheus --values /tmp/prometheus.values --namespace prometheus'
