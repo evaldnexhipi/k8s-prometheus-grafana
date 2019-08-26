@@ -58,7 +58,7 @@ spec:
             
             sh 'sed -i "s/<<NFS Server IP>>/${remote.host}/g" deployment.yaml'
             }
-            stage ("stage 3"){
+            stage ("Class.yaml Configuration"){
                 sh 'touch class.yaml'
                 sh 'echo "apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -69,26 +69,34 @@ provisioner: example.com/nfs
 parameters:
  archiveOnDelete: \"false\"" >> class.yaml'
             }
-            stage ("stage 4"){
+            stage ("rback.yaml Configuration"){
+                /*
+                    TODO - Not yet done
+                */
+            }
+            stage ("Deployment of the 3 files"){
+                sh 'kubectl create -f deployment.yaml class.yaml rbac.yaml'
+            }
+            stage ("Helm Installation"){
+                /*
+                    TODO - Not yet done
+                */
+            }
+            stage ("Prometheus pre-Installation"){
+                sh 'kubectl -n kube-system create service account tiller'
+                sh 'kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller'
+                sh 'helm init --service-account tiller'
+            }
+            stage ("Waiting function"){
             
             }
-            stage ("stage 5"){
-            
+            stage ("Prometheus Configuration"){
+                sh 'helm inspect values stable/prometheus > /tmp/prometheus.values'
+                //Ndryshimi i vlerave
             }
-            stage ("stage 6"){
-            
-            }
-            stage ("stage 7"){
-            
-            }
-            stage ("stage 8"){
-            
-            }
-            stage ("stage 9"){
-            
-            }
-            stage ("stage 10"){
-            
+            stage ("Prometheus Installation"){
+                sh 'helm install stable/prometheus --name prometheus --values /tmp/prometheus.values --namespace prometheus'
+                sh 'kubectl get all -n prometheus'
             }
             stage ("stage 11"){
             
