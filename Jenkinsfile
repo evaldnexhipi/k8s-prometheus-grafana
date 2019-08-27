@@ -16,9 +16,55 @@ node{
             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
         ]]) 
         {
-            stage("1"){
-                
-            }  
-        }
+            stage ("Verifications"){
+                sh 'kubectl cluster-info'
+                sh 'kubectl get nodes'
+                sh 'kubectl version --short'
+            }
+            stage ("Deployment of files"){
+                sh 'rm -r yamlFile'
+                sh 'git clone https://github.com/evaldnexhipi/yamlFile.git'
+                sh "sed -i \"s/<<NFS Server IP>>/\"${remote.host}\"/g\" yamlFile/deployment.yaml"
+            }
+            stage ("Deployment of the 3 files"){
+                sh 'kubectl create -f yamlFile/deployment.yaml' 
+                sh 'kubectl create -f yamlFile/class.yaml --validate=false'
+                sh 'kubectl create -f yamlFile/rbac.yaml'
+            }
+            stage ("Helm Installation"){
+                sh 'wget https://get.helm.sh/helm-v3.0.0-beta.1-linux-amd64.tar.gz'
+                sh 'tar -zxvf helm-v3.0.0-beta.1-linux-amd64.tar.gz'
+                sh 'sudo mv linux-amd64/helm /usr/local/bin/helm'
+            }
+            stage ("Prometheus pre-Installation"){
+                sh 'kubectl -n kube-system create serviceaccount tiller'
+                sh 'kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller'
+                sh 'helm init serviceaccount tiller'
+            }
+            stage ("Waiting function"){
+                /*
+                    TODO - Not done yet
+                */
+            }
+            stage ("Prometheus Configuration"){
+                sh 'helm inspect values stable/prometheus > /tmp/prometheus.values'
+                sh 'sed -i "s/type:ClusterIP/type:NodePort\nnodePort:32322/g" prometheus.values'
+
+            }
+            stage ("Prometheus Installation"){
+                sh 'helm install stable/prometheus --name prometheus --values /tmp/prometheus.values --namespace prometheus'
+                sh 'kubectl get all -n prometheus'
+            }
+
+            stage ("Grafana Configuration"){
+                sh 'helm inspect values stable/grafana > /tmp/grafana.values'
+                /*
+                    TODO editimi i vlerave dhe passwordi dhe persistence
+                */
+            }
+            stage ("Grafana Installation"){
+                sh 'helm install stable/grafana --name grafana --values /tmp/grafana.values --namespace grafana'
+            }
+        }  
     }
 }
