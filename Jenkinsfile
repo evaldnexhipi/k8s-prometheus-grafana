@@ -1,7 +1,7 @@
 def remote = [:]
 remote.name = "ubuntu"
 remote.allowAnyHosts = true
-remote.host = "IP-ja juaj"
+remote.host = "IP"
 def ID
 def IP
 node{
@@ -21,31 +21,34 @@ node{
                 sh 'kubectl get nodes'
                 sh 'kubectl version --short'
             }
+            
             stage ("Deployment of files"){
-                sh 'rm -r yamlFile'
-                sh 'git clone https://github.com/evaldnexhipi/yamlFile.git'
-                sh "sed -i \"s/<<NFS Server IP>>/\"${remote.host}\"/g\" yamlFile/deployment.yaml"
+                sh 'git clone https://github.com/evaldnexhipi/yamlDirectory.git'
+                sh "sed -i \"s/<<NFS Server IP>>/\"${remote.host}\"/g\" yamlDirectory/deployment.yaml"
             }
             stage ("Deployment of the 3 files"){
-                sh 'kubectl create -f yamlFile/deployment.yaml' 
-                sh 'kubectl create -f yamlFile/class.yaml --validate=false'
-                sh 'kubectl create -f yamlFile/rbac.yaml'
+                sh 'kubectl create -f yamlDirectory/deployment.yaml' 
+                sh 'kubectl create -f yamlDirectory/class.yaml --validate=false'
+                sh 'kubectl create -f yamlDirectory/rbac.yaml'
             }
+            
             stage ("Helm Installation"){
-                sh 'wget https://get.helm.sh/helm-v3.0.0-beta.1-linux-amd64.tar.gz'
-                sh 'tar -zxvf helm-v3.0.0-beta.1-linux-amd64.tar.gz'
-                sh 'sudo mv linux-amd64/helm /usr/local/bin/helm'
+                sh 'curl -LO https://git.io/get_helm.sh'
+                sh 'chmod 700 get_helm.sh'
+                sh './get_helm.sh'
             }
+        
             stage ("Prometheus pre-Installation"){
-                sh 'kubectl -n kube-system create serviceaccount tiller'
+               sh 'kubectl -n kube-system create serviceaccount tiller'
                 sh 'kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller'
-                sh 'helm init serviceaccount tiller'
+                sh 'kubectl get serviceaccounts -n kube-system'
+                sh 'helm init'
+                sh 'helm init --service-account tiller --wait'
             }
             stage ("Waiting function"){
-                /*
-                    TODO - Not done yet
-                */
+                  sh 'kubectl -n kube-system get pods'
             }
+            
             stage ("Prometheus Configuration"){
                 sh 'helm inspect values stable/prometheus > /tmp/prometheus.values'
                 sh 'sed -i "s/type:ClusterIP/type:NodePort\nnodePort:32322/g" prometheus.values'
