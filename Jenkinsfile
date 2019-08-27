@@ -32,14 +32,14 @@ node{
                 sh 'kubectl create -f yamlFile/rbac.yaml'
             }
             stage ("Helm Installation"){
-                sh 'curl -LO https://git.io/get_helm.sh'
-                sh 'chmod 700 get_helm.sh'
-                sh './get_helm.sh'
+                sh 'wget https://get.helm.sh/helm-v3.0.0-beta.1-linux-amd64.tar.gz'
+                sh 'tar -zxvf helm-v3.0.0-beta.1-linux-amd64.tar.gz'
+                sh 'sudo mv linux-amd64/helm /usr/local/bin/helm'
             }
             stage ("Prometheus pre-Installation"){
                 sh 'kubectl -n kube-system create serviceaccount tiller'
                 sh 'kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller'
-                sh 'helm init --service-account tiller'
+                sh 'helm init serviceaccount tiller'
             }
             stage ("Waiting function"){
                 /*
