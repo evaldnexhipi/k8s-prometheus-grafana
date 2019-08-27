@@ -42,11 +42,11 @@ node{
                sh 'kubectl -n kube-system create serviceaccount tiller'
                 sh 'kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller'
                 sh 'kubectl get serviceaccounts -n kube-system'
-                sh 'helm init'
                 sh 'helm init --service-account tiller --wait'
             }
             stage ("Waiting function"){
                   sh 'kubectl -n kube-system get pods'
+                  sh 'sleep 30'
             }
             
             stage ("Prometheus Configuration"){
