@@ -42,9 +42,8 @@ node{
                 sh 'helm init serviceaccount tiller'
             }
             stage ("Waiting function"){
-                /*
-                    TODO - Not done yet
-                */
+                //simple function
+                sh 'sleep 30'
             }
             stage ("Prometheus Configuration"){
                 sh 'helm inspect values stable/prometheus > /tmp/prometheus.values'
