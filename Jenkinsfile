@@ -1,7 +1,7 @@
 def remote = [:]
 remote.name = "ubuntu"
 remote.allowAnyHosts = true
-remote.host = "IP"
+remote.host = "18.221.133.235"
 def ID
 def IP
 node{
@@ -21,10 +21,11 @@ node{
                 sh 'kubectl get nodes'
                 sh 'kubectl version --short'
             }
-            
+            /*
             stage ("Deployment of files"){
-                sh 'git clone https://github.com/evaldnexhipi/yamlDirectory.git'
-                sh "sed -i \"s/<<NFS Server IP>>/\"${remote.host}\"/g\" yamlDirectory/deployment.yaml"
+                sh 'rm -r yamlDirectory'
+               sh 'git clone https://github.com/evaldnexhipi/yamlDirectory.git'
+               sh "sed -i \"s/<<NFS Server IP>>/\"${remote.host}\"/g\" yamlDirectory/deployment.yaml"
             }
             stage ("Deployment of the 3 files"){
                 sh 'kubectl create -f yamlDirectory/deployment.yaml' 
@@ -37,36 +38,39 @@ node{
                 sh 'chmod 700 get_helm.sh'
                 sh './get_helm.sh'
             }
-        
+            */
             stage ("Prometheus pre-Installation"){
-               sh 'kubectl -n kube-system create serviceaccount tiller'
-                sh 'kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller'
-                sh 'kubectl get serviceaccounts -n kube-system'
-                sh 'helm init --service-account tiller --wait'
+              // sh 'kubectl -n kube-system create serviceaccount tiller'
+                //sh 'kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller'
+                //sh 'kubectl get serviceaccounts -n kube-system'
+                //sh 'helm init --service-account tiller --wait'
             }
             stage ("Waiting function"){
-                  sh 'kubectl -n kube-system get pods'
-                  sh 'sleep 30'
-            }
-            
-            stage ("Prometheus Configuration"){
-                sh 'helm inspect values stable/prometheus > /tmp/prometheus.values'
-                sh 'sed -i "s/type:ClusterIP/type:NodePort\nnodePort:32322/g" prometheus.values'
-
-            }
-            stage ("Prometheus Installation"){
-                sh 'helm install stable/prometheus --name prometheus --values /tmp/prometheus.values --namespace prometheus'
-                sh 'kubectl get all -n prometheus'
+                 // sh 'kubectl -n kube-system get pods'
+                 // sh 'sleep 30'
             }
 
-            stage ("Grafana Configuration"){
-                sh 'helm inspect values stable/grafana > /tmp/grafana.values'
-                /*
-                    TODO editimi i vlerave dhe passwordi dhe persistence
-                */
+            stage ("Prometheus Deployment"){
+                //sh 'helm del --purge prometheus'
+                //sh 'helm repo update'
+                //sh 'helm install stable/prometheus --namespace monitoring --name prometheus --set server.service.type=LoadBalancer --set server.service.servicePort=8082'
             }
-            stage ("Grafana Installation"){
-                sh 'helm install stable/grafana --name grafana --values /tmp/grafana.values --namespace grafana'
+
+            stage("Defining the grafana data sources"){
+                //sh 'helm del --purge grafana'
+                sh 'kubectl apply -f https://raw.githubusercontent.com/islajd/kubernetes-prometheus-grafana/master/monitoring/grafana/config.yml'
+                sh 'kubectl get configmaps -n monitoring'
+            }
+            stage("Override Grafana value"){
+                sh 'helm install stable/grafana --namespace monitoring --name grafana --set service.type=LoadBalancer --set service.port=8081 --set persistence.enabled=true'
+                sh 'kubectl get pods -n monitoring'
+            }
+            stage("Get the Grafana Password"){
+                sh 'kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}"| base64 --decode ; echo'
+            }
+            stage ("Testing"){
+                sh 'kubectl describe service prometheus -n monitoring'
+                sh 'kubectl describe service grafana -n monitoring'
             }
         }  
     }
