@@ -21,9 +21,9 @@ node{
                 sh 'kubectl get nodes'
                 sh 'kubectl version --short'
             }
-            /*
+
             stage ("Deployment of files"){
-                sh 'rm -r yamlDirectory'
+            sh 'rm -r yamlDirectory'
                sh 'git clone https://github.com/evaldnexhipi/yamlDirectory.git'
                sh "sed -i \"s/<<NFS Server IP>>/\"${remote.host}\"/g\" yamlDirectory/deployment.yaml"
             }
@@ -38,22 +38,22 @@ node{
                 sh 'chmod 700 get_helm.sh'
                 sh './get_helm.sh'
             }
-            */
+            
             stage ("Prometheus pre-Installation"){
-              // sh 'kubectl -n kube-system create serviceaccount tiller'
-                //sh 'kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller'
-                //sh 'kubectl get serviceaccounts -n kube-system'
-                //sh 'helm init --service-account tiller --wait'
+               sh 'kubectl -n kube-system create serviceaccount tiller'
+                sh 'kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller'
+                sh 'kubectl get serviceaccounts -n kube-system'
+                sh 'helm init --service-account tiller --wait'
             }
             stage ("Waiting function"){
-                 // sh 'kubectl -n kube-system get pods'
-                 // sh 'sleep 30'
+                  sh 'kubectl -n kube-system get pods'
+                  sh 'sleep 30'
             }
 
             stage ("Prometheus Deployment"){
                 //sh 'helm del --purge prometheus'
-                //sh 'helm repo update'
-                //sh 'helm install stable/prometheus --namespace monitoring --name prometheus --set server.service.type=LoadBalancer --set server.service.servicePort=8082'
+                sh 'helm repo update'
+                sh 'helm install stable/prometheus --namespace monitoring --name prometheus --set server.service.type=LoadBalancer --set server.service.servicePort=8082'
             }
 
             stage("Defining the grafana data sources"){
