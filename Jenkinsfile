@@ -58,7 +58,7 @@ node{
 
             stage("Defining the grafana data sources"){
                 //sh 'helm del --purge grafana'
-                sh 'kubectl apply -f https://raw.githubusercontent.com/islajd/kubernetes-prometheus-grafana/master/monitoring/grafana/config.yml'
+                sh 'kubectl apply -f https://raw.githubusercontent.com/evaldnexhipi/yamlFiles/master/monitoring/grafana/config.yml'
                 sh 'kubectl get configmaps -n monitoring'
             }
             stage("Override Grafana value"){
