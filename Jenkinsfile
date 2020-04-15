@@ -12,7 +12,7 @@ node{
         [[
             $class: 'AmazonWebServicesCredentialsBinding',
             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-            credentialsId: 'cfb29e08-bb19-420f-b13e-079804cbfe52',  // ID of credentials in kubernetes
+            credentialsId: 'cfb29e08-bb19-420f-b13e-079804cbfe52', 
             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
         ]]) 
         {
